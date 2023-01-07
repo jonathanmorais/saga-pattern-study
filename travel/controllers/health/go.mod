@@ -1,4 +1,4 @@
-module github.com/jonathanmorais/saga-pattern-study/travel/controllers/healthcheck
+module github.com/jonathanmorais/saga-pattern-study/travel/controllers/health
 
 go 1.18
 
