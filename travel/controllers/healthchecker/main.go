@@ -10,7 +10,6 @@ type Response struct {
 	Status int `json:"status" binding:"required"`
 }
 
-// Ok godoc
 // @Summary Return 200 status Ok in healthcheck
 // @Tags Healthcheck
 // @Produce json
