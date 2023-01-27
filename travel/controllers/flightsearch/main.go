@@ -9,11 +9,15 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func SagaProducer(c *gin.Context) {
-	topic := "flighttopic"
-	partition := 0
+const (
+	topic     = "flighttopic"
+	partition = 0
+	broker    = "localhost"
+)
 
-	conn, err := kafka.DialLeader(context.Background(), "tcp", "kafka:9092", topic, partition)
+func BrokerConn() bool {
+
+	conn, err := kafka.DialLeader(context.Background(), "tcp", broker+":9092", topic, partition)
 	if err != nil {
 		log.Fatal("failed to dial leader:", err)
 	}
@@ -31,4 +35,37 @@ func SagaProducer(c *gin.Context) {
 	if err := conn.Close(); err != nil {
 		log.Fatal("failed to close writer:", err)
 	}
+
+	return true
+}
+
+func SagaProducer(c *gin.Context) {
+
+	conn := BrokerConn()
+	if conn == false {
+		log.Fatal("failed to take connection with broker:", conn)
+	}
+
+	// make a writer that produces to topic-A, using the least-bytes distribution
+	w := &kafka.Writer{
+		Addr:     kafka.TCP(broker+":9092", broker+":9093", broker+":9094"),
+		Topic:    topic,
+		Balancer: &kafka.LeastBytes{},
+	}
+
+	err := w.WriteMessages(context.Background(),
+		kafka.Message{
+			Key:   []byte("Flight"),
+			Value: []byte("San Francisco"),
+		},
+	)
+	log.Println(w.Logger)
+	if err != nil {
+		log.Fatal("failed to write messages:", err)
+	}
+
+	if err := w.Close(); err != nil {
+		log.Fatal("failed to close writer:", err)
+	}
+
 }
