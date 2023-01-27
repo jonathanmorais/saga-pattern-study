@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/flightsaga"
 	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/healthchecker"
 )
 
