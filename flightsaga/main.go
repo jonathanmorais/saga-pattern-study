@@ -1,4 +1,4 @@
-package main
+package flightsaga
 
 import (
 	"context"
@@ -70,9 +70,9 @@ func SagaProducer(c *gin.Context) {
 
 }
 
-func main() {
-	router := gin.New()
-	router.POST("/flightservice", SagaProducer)
-	router.Run(":8070")
+// func main() {
+// 	router := gin.New()
+// 	router.POST("/flightservice", SagaProducer)
+// 	router.Run(":8070")
 
-}
+// }
