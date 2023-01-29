@@ -5,7 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/segmentio/kafka-go"
 )
 
@@ -39,7 +38,7 @@ func BrokerConn() bool {
 	return true
 }
 
-func SagaProducer(c *gin.Context) {
+func SagaProducer() {
 
 	conn := BrokerConn()
 	if conn == false {
