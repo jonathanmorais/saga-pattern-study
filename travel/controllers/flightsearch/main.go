@@ -1,12 +1,7 @@
 package flightsearch
 
 import (
-	"context"
-	"log"
-	"time"
-
-	"github.com/gin-gonic/gin"
-	"github.com/segmentio/kafka-go"
+	"github.com/jonathanmorais/saga-pattern-study/flightsaga"
 )
 
 const (

@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.8.2
-	github.com/segmentio/kafka-go v0.4.38
+	github.com/jonathanmorais/saga-pattern-study/flightsaga v0.0.0-20230129222410-57ba83b4dc1c
 )
 
 require (
