@@ -1,4 +1,4 @@
-package flightsaga
+package main
 
 import (
 	"context"
@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
+	"github.com/gin-gonic/gin"
+
 )
 
 const (
@@ -38,7 +40,7 @@ func BrokerConn() bool {
 	return true
 }
 
-func SagaProducer() {
+func SagaProducer(c *gin.Context) {
 
 	conn := BrokerConn()
 	if conn == false {
@@ -69,9 +71,13 @@ func SagaProducer() {
 
 }
 
-// func main() {
-// 	router := gin.New()
-// 	router.POST("/flightservice", SagaProducer)
-// 	router.Run(":8070")
+func SagaStart() {
+	router := gin.New()
+	router.POST("/flightservice", SagaProducer)
+	router.Run(":8070")
 
-// }
+}
+
+func main() {
+	SagaStart()
+}

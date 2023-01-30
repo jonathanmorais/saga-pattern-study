@@ -9,7 +9,7 @@ import (
 func main() {
 	router := gin.New()
 	router.POST("/health'", healthchecker.Ok)
-	router.POST("/flightsaga", flightsearch.SagaProducer)
+	router.POST("/flightsaga", flightsearch.FlightSearch)
 	router.Run(":8090")
 
 }
