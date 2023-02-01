@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"time"
 	"encoding/json"
 	"github.com/segmentio/kafka-go"
 	"github.com/gin-gonic/gin"
@@ -25,35 +24,36 @@ func FlightProducer(c *gin.Context) {
 
 	// to produce messages
 	topic := "flighttopic"
-	partition := 0
+	//partition := 0
 
-	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
-	if err != nil {
-		log.Fatal("failed to dial leader:", err)
-
+	w := &kafka.Writer{
+		Addr:     kafka.TCP("localhost:9092"),
+		Topic:   topic,
+		Balancer: &kafka.LeastBytes{},
 	}
-
-	
+		
 	// conver
-	message, err := json.Marshal(request)
+	out, err := json.Marshal(request)
     if err != nil {
         panic (err)
     }
-	conn.SetWriteDeadline(time.Now().Add(10*time.Second))
-	_, err = conn.WriteMessages(
-		kafka.Message{Value: message},
-	)
+	message := string(out) 
+
+	err = w.WriteMessages(context.Background(),
+	kafka.Message{
+		Key:   []byte("Message"),
+		Value: []byte(message),
+	},)
+
 	if err != nil {
 		log.Fatal("failed to write messages:", err)
 	}
 
-	
-	if err := conn.Close(); err != nil {
+	log.Println("Sended")
+
+	if err := w.Close(); err != nil {
 		log.Fatal("failed to close writer:", err)
 	}
-		// router := gin.New()
-	// router.POST("/flightproducer", FlightProducer)
-	// router.Run(":8070")
 }
 
 func main() {
