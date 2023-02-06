@@ -10,6 +10,7 @@ func main() {
 	router := gin.New()
 	router.POST("/health'", healthchecker.Ok)
 	router.POST("/flightsaga", flightsearch.FlightSearch)
+	// router.GET("flightcheck", flightforward.FlightConsumer)
 	router.Run(":8090")
 
 }
