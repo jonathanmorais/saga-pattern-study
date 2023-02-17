@@ -4,7 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/flightsearch"
 	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/healthchecker"
+	"saga-pattern-study/travel/initializers"
 )
+
+func init() {
+	initializers.LoadEnvVariables()
+	initializers.ConnectToMongo()
+}
 
 func main() {
 	router := gin.New()
