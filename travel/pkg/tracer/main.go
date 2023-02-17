@@ -31,7 +31,7 @@ func InitTracer() *sdktrace.TracerProvider {
 		sdktrace.WithSampler(sdktrace.AlwaysSample()),
 		sdktrace.WithResource(resource.NewWithAttributes(
 			semconv.SchemaURL,
-			semconv.ServiceNameKey.String("health-api"),
+			semconv.ServiceNameKey.String("travel"),
 		)),
 	)
 

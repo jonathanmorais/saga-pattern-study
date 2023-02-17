@@ -36,5 +36,31 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - /tmp/mongo_db:/data/db      
-      
+      - /tmp/mongo_db:/data/db
+  travel-api:
+    build:
+        context: ./travel
+        dockerfile: Dockerfile.dev
+    environment:
+      - ENVIRONMENT=dev
+      - JAEGER_COLLECTOR_ENDPOINT=http://jaeger:14268/api/traces
+    ports:
+        - 8090:8090
+  flight-service:
+    build:
+        context: ./flight-service
+        dockerfile: Dockerfile.dev
+    environment:
+      - ENVIRONMENT=dev
+      - JAEGER_COLLECTOR_ENDPOINT=http://jaeger:14268/api/traces
+    ports:
+        - 8060:8060   
+  forward-service:
+    build:
+        context: ./travel
+        dockerfile: Dockerfile.dev
+    environment:
+      - ENVIRONMENT=dev
+      - JAEGER_COLLECTOR_ENDPOINT=http://jaeger:14268/api/traces
+    ports:
+        - 8070:8070
