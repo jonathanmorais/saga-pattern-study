@@ -1,14 +1,15 @@
 package main
 
 import (
+	"time"
+	"os"
+	"strconv"
+	"fmt"
+	"github.com/Depado/ginprom"
 	"github.com/gin-gonic/gin"
 	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/flightsearch"
 	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/healthchecker"
 	"saga-pattern-study/travel/initializers"
-	"github.com/Depado/ginprom"
-	"github.com/gin-gonic/gin"
-	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/liveness"
-	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/readiness"
 	"github.com/jonathanmorais/saga-pattern-study/travel/pkg/memory_cache"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -60,7 +61,7 @@ func main() {
 	router.Use(p.Instrument())
 	router.Use(gin.Recovery())
 
-	router := gin.New()
+	router = gin.New()
 	router.POST("/health'", healthchecker.Ok)
 	router.POST("/flightsaga", flightsearch.FlightSearch)
 	// router.GET("flightcheck", flightforward.FlightConsumer)
