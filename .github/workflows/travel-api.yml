@@ -1,0 +1,81 @@
+name: 'travel-api ci'
+on:
+  push:
+  pull_request:
+    types: [ opened, reopened ]
+jobs:
+  unit-test:
+    strategy:
+      matrix:
+        go-version: [1.18.x]
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+
+      - uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: setup GOPATH into PATH
+        run: |
+          echo "::set-env name=GOPATH::$(go env GOPATH)"
+          echo "::add-path::$(go env GOPATH)/bin"
+        shell: bash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+      - uses: actions/checkout@v2
+
+      - name: Run's Golint
+        working-directory: travel-api
+        run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
+          go get -u golang.org/x/lint/golint
+          # golint -set_exit_status ./...
+
+      - name: Install dependencies
+        working-directory: travel-api
+        run: go get -u
+
+      - name: Test
+        working-directory: travel-api
+        run: go test -v
+
+  build-docker-artifacts:
+    needs: [ unit-test ]
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'main')
+    steps:
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.18.x'
+
+      - uses: actions/checkout@v1
+
+      - name: Docker Build
+        working-directory: travel-api
+        run: docker build -t travel-api:latest .
+
+      - name: Docker Tag Latest
+        working-directory: travel-api
+        run: docker tag travel-api:latest jonathan99/travel-api:latest
+
+      - name: Docker Tag Release
+        run: |
+          TAG=$(git rev-parse --short HEAD)
+          docker tag travel-api:latest jonathan99/travel-api:$TAG
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASS }}
+
+      - name: Docker Push Latest
+        working-directory: travel-api
+        run: docker push jonathan99/travel-api:latest
+
+      - name: Docker Push Release Tag
+        working-directory: travel-api
+        run: |
+          TAG=$(git rev-parse --short HEAD)
+          docker push jonathan99/travel-api:$TAG
