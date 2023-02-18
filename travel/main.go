@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/flightsearch"
 	"github.com/jonathanmorais/saga-pattern-study/travel/controllers/healthchecker"
-	"saga-pattern-study/travel/initializers"
+	"github.com/jonathanmorais/saga-pattern-study/travel/initializers"
 	"github.com/jonathanmorais/saga-pattern-study/travel/pkg/memory_cache"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
