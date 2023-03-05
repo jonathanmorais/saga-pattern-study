@@ -7,3 +7,14 @@ For this study, i will approach a travel payment system with three steps or Saga
 
 ## architecture
 ![arch](.github/images/saga-pattern.jpg)
+
+# API  
+
+## Usage 
+
+```bash
+curl --header "Content-Type: application/json" -\
+    -request POST --data '{"message":"holy wars"}' \
+    http://localhost:8070/flightproducer \
+     ' --silent | jq .
+```
