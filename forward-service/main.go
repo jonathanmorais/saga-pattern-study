@@ -2,10 +2,15 @@ package main
 
 
 import (
+	"os"
 	"log"
 	"context"
 	"github.com/segmentio/kafka-go"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
+	logi "github.com/rs/zerolog/log"
+	"github.com/Depado/ginprom"
+
 
 )
 
@@ -42,7 +47,33 @@ func FlightConsumer() string{
 }
 
 func main() {
+	// Logger
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	if gin.IsDebugging() {
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	}
+
+	logi.Logger = logi.Output(
+		zerolog.ConsoleWriter{
+			Out:     os.Stderr,
+			NoColor: false,
+		},
+	)
+
 	router := gin.New()
+
+	// Prometheus Exporter Config
+	p := ginprom.New(
+		ginprom.Engine(router),
+		ginprom.Subsystem("gin"),
+		ginprom.Path("/metrics"),
+	)
+
+	//Middlewares
+	router.Use(p.Instrument())
+	router.Use(gin.Recovery())
+	
+	
 	go FlightConsumer()
 	router.Run(":8050")
 
